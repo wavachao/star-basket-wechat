@@ -3,19 +3,38 @@ const fs = require('node:fs');
 const path = require('node:path');
 const zlib = require('node:zlib');
 const root = path.resolve(__dirname, '..');
+const release = require('./release-config').readReleaseConfig(root);
+const options = process.argv.slice(2);
+if (options.some(option => option !== '--archive')) throw new Error('Usage: node tools/package.js [--archive]');
+const archive = options.includes('--archive');
 require('./build').build();
 function crc32(buf) { let c = 0xffffffff; for (const b of buf) { c ^= b; for (let i = 0; i < 8; i++) c = (c >>> 1) ^ ((c & 1) ? 0xedb88320 : 0); } return (c ^ 0xffffffff) >>> 0; }
 function walk(dir) { return fs.readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(path.join(dir, e.name)) : [path.join(dir, e.name)]); }
 const entries = [];
-for (const folder of ['dist/wechat', 'docs', 'release-assets']) {
+// Only runtime files belong in the default game ZIP.
+for (const folder of ['dist/wechat/src', 'dist/wechat/assets']) {
   const dir = path.join(root, folder);
   if (!fs.existsSync(dir)) continue;
   for (const file of walk(dir)) {
-    if (file.endsWith('CONTRACT.md') || file.endsWith('project.private.config.json')) continue;
     entries.push({ name: path.relative(root, file).replace(/\\/g, '/').replace(/^dist\//, ''), data: fs.readFileSync(file) });
   }
 }
-entries.push({ name: 'icon.png', data: fs.readFileSync(path.join(root, 'assets/icon.png')) });
+for (const file of ['game.js', 'game.json', 'project.config.json']) {
+  entries.push({ name: 'wechat/' + file, data: fs.readFileSync(path.join(root, 'dist/wechat', file)) });
+}
+// Release material is opt-in and explicitly listed; internal notes stay local.
+if (archive) {
+  const publicFiles = ['README.md', 'docs/RELEASE.md', 'docs/PRIVACY.md', 'docs/STORE.md',
+    'release-assets/wechat-menu.png', 'release-assets/wechat-pause.jpg',
+    'release-assets/wechat-play-1.png', 'release-assets/wechat-play-2.png',
+    'release-assets/wechat-play-3.png', 'release-assets/wechat-play-4.png',
+    'release-assets/wechat-result.png', 'release-assets/wechat-gameplay-c.png',
+    'release-assets/wechat-scene-best-menu.png'];
+  for (const file of publicFiles) {
+    const full = path.join(root, file);
+    if (fs.existsSync(full)) entries.push({ name: file, data: fs.readFileSync(full) });
+  }
+}
 const local = [], central = [];
 let offset = 0;
 for (const { name, data } of entries) {
@@ -28,6 +47,6 @@ for (const { name, data } of entries) {
   central.push(c, filename); offset += h.length + filename.length + compressed.length;
 }
 const index = Buffer.concat(central), end = Buffer.alloc(22); end.writeUInt32LE(0x06054b50); end.writeUInt16LE(entries.length, 8); end.writeUInt16LE(entries.length, 10); end.writeUInt32LE(index.length, 12); end.writeUInt32LE(offset, 16);
-const target = path.join(root, 'dist/star-basket-wechat-1.0.0.zip');
+const target = path.join(root, 'dist', `${release.name}-wechat-${release.version}${archive ? '-archive' : ''}.zip`);
 fs.writeFileSync(target, Buffer.concat([...local, index, end]));
 console.log(`Packaged ${entries.length} files: ${target}`);

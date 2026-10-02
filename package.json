@@ -7,7 +7,9 @@
     "check": "node tools/check.js",
     "test": "node tools/test.js",
     "package": "node tools/package.js",
+    "package:archive": "node tools/package.js --archive",
     "wechat": "node tools/wechat.js"
   },
-  "engines": { "node": ">=18" }
+  "engines": { "node": ">=18" },
+  "wechat": { "uploadDescription": "接星星避石头六十秒挑战上线" }
 }

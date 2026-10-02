@@ -23,7 +23,7 @@
 
 ## 本地运行
 
-需要 Git 和 Node.js 18 或更高版本。仓库为私有，克隆前需具备访问权限。
+需要 Git 和 Node.js 18 或更高版本。仓库公开，可直接克隆。
 
 ```sh
  git clone https://github.com/wavachao/star-basket-wechat.git
@@ -45,13 +45,15 @@
 | `npm run test` | 运行玩法、渲染和平台适配等自动化测试 |
 | `npm run check` | 检查 JavaScript 语法、项目配置及微信包内容 |
 | `npm run build` | 生成微信项目和浏览器预览资源 |
-| `npm run package` | 构建并生成包含游戏、素材与文档的 ZIP |
+| `npm run package` | 构建并生成仅含微信运行工程的 ZIP |
+| `npm run package:archive` | 生成含游戏、指定发布文档和截图的归档 ZIP |
 
 构建产物不会提交到 Git，需要在克隆后自行生成：
 
 - `dist/wechat/`：可导入微信开发者工具的小游戏项目。
 - `dist/preview/`：浏览器预览文件。
-- `dist/star-basket-wechat-1.0.0.zip`：运行打包命令后生成，游戏位于压缩包内的 `wechat/` 目录。
+- `dist/star-basket-wechat-1.0.0.zip`：仅含 `wechat/` 运行工程。版本号读取 `package.json`，更新版本后文件名自动变化。
+- `dist/star-basket-wechat-1.0.0-archive.zip`：运行 `npm run package:archive` 生成，额外包含白名单中的发布文档及九张游戏截图；不包含内部续办记录、测试报告或本机调试资料。
 
 `preview/bundle.js` 也是自动生成的文件，应修改 `src/` 中的源码后重新构建。
 
@@ -69,6 +71,10 @@ npm run build -- --appid YOUR_WECHAT_APPID
 ```
 
 也可通过 `WECHAT_APPID` 环境变量指定。命令行参数优先，覆盖只作用于构建产物，不修改源码配置。`touristappid` 仅可用于本地预览，不能用于正式上传。
+
+当前工作站已通过用户级 `WECHAT_DEVTOOLS` 指向共享安装的微信开发者工具，重开终端后生效。其他电脑需设置为自己的安装目录；未设置时仍兼容项目内 `.tools/wechat-devtools`。
+
+上传版本统一读取 `package.json.version`，默认上传说明读取 `package.json.wechat.uploadDescription`，也可用 `WECHAT_UPLOAD_DESC` 临时覆盖。修改开发脚本不需要提高游戏版本；下一次发布游戏更新时再修改版本及说明。
 
 具体导入、真机验收和发布步骤见 [微信发布指南](docs/RELEASE.md)。
 
@@ -108,4 +114,4 @@ npm run build -- --appid YOUR_WECHAT_APPID
 - [后台文案](docs/STORE.md)：名称、简介、玩法及自审说明。
 - [发布续办记录](docs/CONTINUE-PUBLISH.md)：本项目的后台操作进度与后续待办。
 
-本地开发工具、构建产物、缓存和登录会话不纳入仓库。
+本地开发工具、构建产物、缓存和登录会话不纳入仓库。`.env`、本地密钥文件也由 `.gitignore` 排除；分享资料优先使用白名单归档包，不直接分享内部 `docs/CONTINUE-PUBLISH.md`。

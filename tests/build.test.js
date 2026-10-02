@@ -15,7 +15,7 @@ function fixture(t) {
   for (const folder of ['src', 'assets', 'preview', 'tools', 'docs', 'release-assets']) {
     fs.mkdirSync(path.join(dir, folder), { recursive: true });
   }
-  for (const file of ['tools/build.js', 'tools/package.js', 'project.config.json', 'game.json']) {
+  for (const file of ['tools/build.js', 'tools/package.js', 'tools/release-config.js', 'project.config.json', 'game.json', 'package.json']) {
     fs.copyFileSync(path.join(root, file), path.join(dir, file));
   }
   fs.writeFileSync(path.join(dir, 'game.js'), "require('./src/core');\n");
@@ -26,8 +26,8 @@ function fixture(t) {
   fs.writeFileSync(path.join(dir, 'docs/CONTRACT.md'), 'Developer-only contract');
   return dir;
 }
-function run(dir, script) {
-  const result = cp.spawnSync(process.execPath, [script], {
+function run(dir, script, args = []) {
+  const result = cp.spawnSync(process.execPath, [script, ...args], {
     cwd: dir, encoding: 'utf8', env: { ...process.env, WECHAT_APPID: '' }
   });
   assert.equal(result.status, 0, result.stderr || result.stdout);
@@ -89,11 +89,30 @@ test('release ZIP excludes preserved private IDE configuration and includes exac
   const privateFile = path.join(dir, 'dist/wechat/project.private.config.json');
   fs.writeFileSync(privateFile, '{"private":"must stay local"}');
   run(dir, 'tools/package.js');
-  const files = localZipEntries(fs.readFileSync(path.join(dir, 'dist/star-basket-wechat-1.0.0.zip')));
+  const project = JSON.parse(fs.readFileSync(path.join(dir, 'package.json')));
+  const files = localZipEntries(fs.readFileSync(path.join(dir, 'dist', `${project.name}-wechat-${project.version}.zip`)));
   assert.equal([...files.keys()].some(name => name.endsWith('project.private.config.json')), false);
   assert.equal(files.has('docs/CONTRACT.md'), false);
-  assert.equal(files.has('docs/RELEASE.md'), true);
+  assert.equal([...files.keys()].every(name => name.startsWith('wechat/')), true);
   assert.deepEqual(files.get('wechat/src/core.js'), fs.readFileSync(path.join(dir, 'src/core.js')));
   assert.deepEqual(files.get('wechat/assets/icon.png'), fs.readFileSync(path.join(dir, 'assets/icon.png')));
   assert.equal(fs.existsSync(privateFile), true, 'packaging must preserve local IDE configuration');
+});
+
+test('changed package version drives ZIP names and archive excludes internal notes and unlisted screenshots', t => {
+  const dir = fixture(t);
+  const project = JSON.parse(fs.readFileSync(path.join(dir, 'package.json')));
+  project.version = '2.3.4';
+  fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify(project));
+  for (const file of ['docs/CONTINUE-PUBLISH.md', 'docs/TEST-REPORT.md', 'docs/private.md', 'release-assets/private.png', 'release-assets/wechat-release.json']) {
+    fs.writeFileSync(path.join(dir, file), 'Internal data');
+  }
+  fs.writeFileSync(path.join(dir, 'release-assets/wechat-menu.png'), 'Approved screenshot');
+  run(dir, 'tools/package.js');
+  assert.ok(fs.existsSync(path.join(dir, 'dist/star-basket-wechat-2.3.4.zip')));
+  run(dir, 'tools/package.js', ['--archive']);
+  const files = localZipEntries(fs.readFileSync(path.join(dir, 'dist/star-basket-wechat-2.3.4-archive.zip')));
+  assert.equal(files.has('docs/RELEASE.md'), true);
+  assert.equal(files.has('release-assets/wechat-menu.png'), true);
+  for (const file of ['docs/CONTRACT.md', 'docs/CONTINUE-PUBLISH.md', 'docs/TEST-REPORT.md', 'docs/private.md', 'release-assets/private.png', 'release-assets/wechat-release.json']) assert.equal(files.has(file), false, file);
 });

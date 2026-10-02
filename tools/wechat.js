@@ -3,6 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const cp = require('node:child_process');
 const root = path.resolve(__dirname, '..');
+const release = require('./release-config').readReleaseConfig(root);
 const command = process.argv[2] || 'open';
 if (!['open', 'login', 'status', 'preview', 'upload'].includes(command)) {
   console.error('Usage: npm run wechat -- open|login|status|preview|upload');
@@ -20,7 +21,7 @@ if (['open', 'preview', 'upload'].includes(command)) {
 }
 if (command === 'login') args.push('--qr-format', 'image', '--qr-output', path.join(artifacts, 'wechat-login.png'));
 if (command === 'preview') args.push('--qr-format', 'image', '--qr-output', path.join(artifacts, 'wechat-preview.png'), '--info-output', path.join(artifacts, 'wechat-preview-info.json'));
-if (command === 'upload') args.push('--version', '1.0.0', '--desc', '接住小星星首版：60秒挑战、接星星避石头、暂停、本地最高分和音效', '--info-output', path.join(artifacts, 'wechat-upload-info.json'));
+if (command === 'upload') args.push('--version', release.version, '--desc', release.uploadDescription, '--info-output', path.join(artifacts, 'wechat-upload-info.json'));
 function quote(value) { if (/["&|<>^%\r\n]/.test(value)) throw new Error('Unsupported shell characters in CLI argument'); return '"' + value + '"'; }
 const line = '"' + [cli, ...args].map(quote).join(' ') + '"';
 const result = cp.spawnSync(process.env.ComSpec || 'cmd.exe', ['/d', '/s', '/c', line], { encoding: 'utf8', maxBuffer: 4 * 1024 * 1024, cwd: root, windowsVerbatimArguments: true });

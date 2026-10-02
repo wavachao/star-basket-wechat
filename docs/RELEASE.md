@@ -13,7 +13,9 @@
 
 官方入口：[小游戏开发文档](https://developers.weixin.qq.com/minigame/dev/guide/)、[微信公众平台](https://mp.weixin.qq.com/)。
 
-本工作站已将微信官方稳定版工具安装到项目的 `.tools/wechat-devtools`，安装包腾讯数字签名验证通过。打开其中的 `微信开发者工具.exe`，用管理员微信扫码登录，并在“设置 → 安全设置”开启“服务端口”，即可使用本项目封装的命令：
+当前工作站使用共享目录中的微信开发者工具，用户级 `WECHAT_DEVTOOLS` 已配置为该目录；重开终端后生效。原项目 `.tools/wechat-devtools` 副本保留，作为未设置环境变量时的兼容路径。其他电脑需安装官方工具，并把 `WECHAT_DEVTOOLS` 设置为自己的安装目录。
+
+打开所配置目录中的 `微信开发者工具.exe`，用管理员微信扫码登录，并在“设置 → 安全设置”开启“服务端口”，即可使用本项目封装的命令：
 
 ```powershell
 npm run wechat -- status
@@ -22,7 +24,7 @@ npm run wechat -- preview
 npm run wechat -- upload
 ```
 
-`open` 导入当前构建后的 `dist/wechat`，`preview` 生成 `artifacts/wechat-preview.png` 供扫码真机游玩，`upload` 上传版本 1.0.0。没有管理员登录或项目权限时，微信工具会拒绝操作；服务端口关闭时无法用命令行控制工具。也可以在开发者工具界面手动导入、预览、上传。其他电脑需要自行安装官方工具，或设置 `WECHAT_DEVTOOLS` 为其安装目录。
+`open` 导入当前构建后的 `dist/wechat`，`preview` 生成 `artifacts/wechat-preview.png` 供扫码真机游玩，`upload` 上传 `package.json.version` 指定的版本，说明读取 `package.json.wechat.uploadDescription`，可用 `WECHAT_UPLOAD_DESC` 覆盖。没有管理员登录或项目权限时，微信工具会拒绝操作；服务端口关闭时无法用命令行控制工具。也可以在开发者工具界面手动导入、预览、上传。其他电脑需要自行安装官方工具，或设置 `WECHAT_DEVTOOLS` 为其安装目录。
 
 ## 2. 构建真正的微信项目
 
@@ -79,4 +81,10 @@ npm run build -- --appid wx05c79716747c9ea7
 
 ## 6. 发布后更新
 
-保留已发布版本对应的 Git 提交。修改后运行测试与检查，重新构建、真机验证，以 `1.0.1` 等新版本上传并重复审核/发布流程。仅切换代码目录不会更新线上游戏。
+保留已发布版本对应的 Git 提交。下次发布游戏更新时，在 `package.json` 中修改 `version` 和 `wechat.uploadDescription`，运行测试与检查，重新构建、真机验证，再上传并重复审核/发布流程。上传与 ZIP 名称会自动使用该版本。仅修改开发脚本或切换代码目录不会更新线上游戏。
+
+## 7. 游戏包与发布资料归档
+
+`npm run package` 生成仅含微信运行工程的 ZIP，解压后导入 `wechat/`。`npm run package:archive` 生成带 `-archive` 后缀的资料包，额外包含 README、发布指南、隐私草稿、商店文案及明确列出的九张游戏截图。新增文档或截图不会自动进入归档，需要在 `tools/package.js` 白名单中明确加入。
+
+内部续办记录、测试报告、微信私有配置和工具目录不进入这两种包。隐私说明仍为草稿，正式使用前须按实际运营信息补齐。
