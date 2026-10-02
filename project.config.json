@@ -1,0 +1,23 @@
+{
+  "description": "接住小星星 — 原创竖屏单机小游戏",
+  "compileType": "game",
+  "appid": "touristappid",
+  "projectname": "star-basket",
+  "setting": {
+    "es6": true,
+    "minified": true,
+    "urlCheck": true
+  },
+  "packOptions": {
+    "ignore": [
+      { "type": "folder", "value": "docs" },
+      { "type": "folder", "value": "tools" },
+      { "type": "folder", "value": "tests" },
+      { "type": "folder", "value": "preview" },
+      { "type": "folder", "value": "dist" },
+      { "type": "folder", "value": ".worktrees" },
+      { "type": "file", "value": "package.json" },
+      { "type": "file", "value": "README.md" }
+    ]
+  }
+}
