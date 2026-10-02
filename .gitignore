@@ -4,3 +4,4 @@ artifacts/
 dist/
 project.private.config.json
 *.log
+preview/bundle.js

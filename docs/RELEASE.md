@@ -20,12 +20,12 @@
 ```powershell
 npm run test
 npm run check
-npm run build -- --appid 你的真实AppID
+npm run build -- --appid wx2c7a7dc88ff120e5
 ```
 
 只导入 `dist/wechat`。该目录包含 `game.js`、`game.json`、`project.config.json`、`src/` 以及存在时的 `assets/`。文档、测试、开发工具和浏览器页面不会进入代码包。
 
-不指定 AppID 时输出 `touristappid`。它用于预览，不能替代自己的账号上传。配置中没有虚构的正式 AppID，未关闭网络域名校验。
+不指定 AppID 时使用源配置中的 `wx2c7a7dc88ff120e5`，这是用户提供的真实小游戏 AppID。`touristappid` 可用于本地预览，但不能用于正式上传。网络域名校验保持开启。
 
 开发者工具导入路径选择 `dist/wechat`，检查项目类型为小游戏、AppID 正确。若工具提示基础库兼容性，选当前稳定基础库，并在实机确认，勿仅凭模拟器结果。
 

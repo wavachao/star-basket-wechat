@@ -22,13 +22,13 @@ npm run build
 
 构建输出：`dist/wechat` 是微信项目；`dist/preview` 是浏览器版本。`preview/bundle.js` 自动生成，不必手工修改。无需运行 `npm install`。
 
-默认 AppID 为 `touristappid`，仅用于本地体验。使用自己的小游戏 AppID 构建：
+项目已配置你提供的小游戏 AppID `wx2c7a7dc88ff120e5`。直接构建即可，也可明确指定：
 
 ```powershell
-npm run build -- --appid wx0123456789abcdef
+npm run build -- --appid wx2c7a7dc88ff120e5
 ```
 
-上面的编号仅为格式示例，请替换为真实 AppID。也可设置环境变量 `WECHAT_APPID`。参数优先于环境变量，不会修改源配置。
+也可设置环境变量 `WECHAT_APPID`。参数优先于环境变量，不会修改源配置。`touristappid` 可用作本地预览占位值，不能用于正式上传。
 
 在微信开发者工具中导入 `dist/wechat`，选择小游戏类型。用管理员或开发者微信登录，检查模拟器，再扫码真机预览。真实 AppID、账号权限、后台资料及审核通过后才能发布；生成代码包并不代表已经上线。
 
