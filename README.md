@@ -25,7 +25,7 @@ npm run package
 
 项目已配置你提供的小游戏 AppID `wx05c79716747c9ea7`。直接构建即可，也可明确指定：
 
-微信开发者工具已成功导入此 AppID，生成真机预览并上传 1.0.0 开发版本，用户已确认微信试玩正常。正式上线还需后台提审与审核后的发布。
+微信开发者工具已成功导入此 AppID，生成真机预览并上传 1.0.0 开发版本，用户已确认微信试玩正常。1.0.0 已于 2026-10-02 提交版本审核，后台状态为“审核中”；小游戏备案已提交，隐私指引和 8+ 适龄设置已完成。审核通过后仍需正式发布，目前尚未上线。
 
 ```powershell
 npm run build -- --appid wx05c79716747c9ea7
@@ -54,3 +54,4 @@ npm run build -- --appid wx05c79716747c9ea7
 页面与绘制元素为项目原创代码；平台要求的主体资料、运营联系方式和资质必须由实际运营者提供。
 
 首版交付 ZIP 为 `dist/star-basket-wechat-1.0.0.zip`，解压后导入其中的 `wechat` 目录。图标为 `assets/icon.png`；实际画面截图位于 `release-assets/screenshots`。验证结果见 `docs/TEST-REPORT.md`。
+

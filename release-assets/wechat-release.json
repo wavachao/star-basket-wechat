@@ -9,6 +9,8 @@
   "uploadSucceeded": true,
   "userConfirmedWechatPlay": true,
   "totalBytes": 126531,
-  "auditSubmitted": false,
-  "published": false
+  "auditSubmitted": true,
+  "published": false,
+  "auditSubmittedAt": "2026-10-02 21:38:27 Asia/Shanghai",
+  "auditStatus": "in_review"
 }
