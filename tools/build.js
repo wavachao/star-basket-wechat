@@ -40,7 +40,8 @@ function build() {
   if (fs.existsSync(path.join(root, 'assets'))) fs.cpSync(path.join(root, 'assets'), path.join(target, 'assets'), {recursive: true});
   config.packOptions = {ignore: []};
   fs.writeFileSync(path.join(target, 'project.config.json'), JSON.stringify(config, null, 2) + '\n');
-  fs.cpSync(preview, targetPreview, {recursive: true});
+  fs.cpSync(preview, path.join(targetPreview, 'preview'), {recursive: true});
+  fs.writeFileSync(path.join(targetPreview, 'index.html'), '<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=preview/index.html"><title>接住小星星</title><a href="preview/index.html">打开游戏</a></html>\n');
   if (fs.existsSync(path.join(root, 'assets'))) fs.cpSync(path.join(root, 'assets'), path.join(targetPreview, 'assets'), {recursive: true});
   console.log('Built dist/wechat and dist/preview. AppID: ' + config.appid);
   if (config.appid === 'touristappid') console.log('Preview only: supply your registered AppID before uploading.');
