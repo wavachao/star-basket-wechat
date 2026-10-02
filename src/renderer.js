@@ -131,14 +131,18 @@ class Renderer {
     for(let i=0;i<3;i++)this.heart(31+i*27,105,i<game.lives);
     this.text(`最佳 ${game.best || 0}`,366,104,12,C.muted,'right');
     this.pill(24,124,342,4,'rgba(255,255,255,.07)'); if(game.remaining>0)this.pill(24,124,Math.max(1,342*game.remaining/60),4,C.mint);
+    c.save(); c.beginPath(); c.rect(0, 138, W, H - 138); c.clip();
     for(const item of game.items || []) {
-      if(item.type==='rock')this.rock(item.x,item.y,item.r || 16); else this.star(item.x,item.y,item.r || 15,Math.sin(item.id || 0)*.15);
+      if(item.type==='rock')this.rock(item.x,item.y,item.r || 16); else this.star(item.x,item.y,item.r || 15,item.rotation || 0);
     }
     for(const p of game.particles || []) {
       c.save(); c.globalAlpha=Math.max(0,Math.min(1,p.life !== undefined ? p.life / (p.maxLife || .6):.7)); c.fillStyle=p.color || C.gold;
       c.beginPath(); c.arc(p.x,p.y,p.r || 3,0,Math.PI*2); c.fill(); c.restore();
     }
-    const player=game.player || {x:195,y:636,width:72,height:34}; this.basket(player.x,player.y,player.width,player.height);
+    c.restore();
+    const player=game.player || {x:195,y:636,width:72,height:34};
+    c.save(); if (game.invulnerable > 0) c.globalAlpha = Math.sin(game.invulnerable * 24) > 0 ? .4 : 1;
+    this.basket(player.x,player.y,player.width,player.height); c.restore();
     if(game.combo>=3){ this.text(`${game.combo} 连接！`,195,158,15,C.gold,'center',600); }
     this.text((game.elapsed || 0)<5?'← 拖动屏幕，让小篮子跟随你 →':'接住每一颗小星星',195,697,12,'#a9c3b9','center');
   }
@@ -168,3 +172,4 @@ class Renderer {
   }
 }
 module.exports = { Renderer };
+
