@@ -20,6 +20,10 @@
 
 2026-10-02 使用开发者工具随附官方 wechatide-skill v0.3.9、新命令 .tools/wechat-devtools/wechatide.cmd，clientName 固定 Codex。用户已允许访问，auth 返回 authorized:true、alreadyTrusted:true、port59029、tokenRequired:false；status 为 versionRelation:equal、loginExpired:false。已打开 dist/wechat 项目窗口，winId s0。新截图接口只得到黑屏，小游戏受控表达式返回 wx:undefined、GameGlobal:undefined、document:object；wx API 通道随后超时。用户手动编译也无反应。读取 console/network、仅清理编译缓存并刷新、关闭重开完整项目窗口后仍黑屏，见 artifacts/wechat-simulator-reopened.png。游戏入口和项目配置只读检查正常，真机此前已正常，尚未确定黑屏原因，不要宣称游戏代码异常已修复。黑屏截图未作为备案图片上传或纳入发布素材。
 
-当前临时后台会话仍保留在第二步。后续优先恢复真实模拟器画面或采集手机菜单、两张不同游玩画面、暂停和结算截图，再上传对应五组图片，进入信息预览并提交备案。备案与版本审核、正式发布均尚未完成。后台登录地址中的会话参数不保存、不分享。
+后续排查已修复开发者工具黑屏。用户提供 WAGame.js 500 后，独立检查在 WeappLog 中发现基础库3.17.2下载并校验成功，但缓存移动 rename 返回 EXDEV，随后 WAGame.js not found in vendor contents map。源目标逻辑上均在同一缓存目录，不能认定真实跨盘。缓存正式包原本缺失。已从官方 https://res.servicewechat.com/weapp/public/commlib/1648.wxapkg 重新下载，复制为正式缓存 WeappVendor/3.17.2.wxvpkg，并重新打开项目。工具接受本地包，模拟器显示真实游戏；wx 为 object、wx.createCanvas 为 function。独立检查确认下载与缓存包均为40,474,402字节，SHA-256相同（938D9DDA9809A5565EC820C9D856193B5E5B4D496C6F4D2FDE9CBC3623130B83）；15:54起没有新增WAGame500、缺失、校验失败或移动失败。没有修改游戏源码或安装程序。后续不要用清除全部缓存重试，以免再次触发同一移动故障。
+
+真实微信模拟器素材已保存为 release-assets/wechat-menu.png、wechat-play-1.png、wechat-result.png、wechat-pause.jpg，均已目视核对，大于60KB。暂停PNG为60,943字节，小于后台60KiB门槛；已用官方截图接口quality100保存JPEG，78,343字节。重复或不达大小要求的截图仅保留artifacts，不作为发布素材。模拟器自动触摸接口偶有超时，不能把接口成功等同每一步游戏交互都已验证；已观察到实际得分/损失爱心/结算和暂停画面，用户此前真机确认全部主要交互正常。
+
+备案第二步文字已显示“保存成功”。上传图片初次被最小大小拦截，重复重试在上传器留下重复文件错误项；更换文件名后已开始新的上传，但尚未确认完成。检查控件时临时自动化会话因未捕获hover超时退出，已重建独立会话，当前等待重新扫码公众平台登录；无需重新签署文件。登录后检查已保存文字和截图状态，补齐对应五组图片，进入信息预览并提交备案。备案与版本审核、正式发布均尚未完成。后台登录地址中的会话参数不保存、不分享。
 
 提交前核对名称可用性、主体与游戏类目、后台要求的资质、备案及隐私配置；查看官方实际提示，完成可填项，再处理审核及发布。素材为 assets/icon.png 和 release-assets/screenshots；后台文案见 docs/STORE.md，隐私说明见 docs/PRIVACY.md。

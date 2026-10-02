@@ -23,6 +23,8 @@
 
 ## 重现
 
+2026-10-02 已修复模拟器基础库缓存故障（官方3.17.2包下载成功但rename返回EXDEV导致WAGame.js 500）。将官方下载包复制到正确缓存位置后重开项目，wx/createCanvas恢复；已观察真实菜单、得分与爱心变化、结算及暂停画面。独立检查下载包与缓存包SHA-256相同，且修复后没有新增WAGame500。素材位于release-assets/wechat-*.png与wechat-pause.jpg。此修复未修改游戏代码；自动触摸部分调用存在接口超时，因此不额外宣称完整自动真机测试通过。
+
 执行 npm test 与 npm run check。可选真实浏览器验证为 tests/browser-smoke.cjs，需要独立安装的 Playwright 与 Chromium，并先运行 npm run preview。当前工作站使用已有测试依赖及独立临时浏览器配置，不读取用户浏览器会话。
 
 执行 npm run package 可重新生成包含微信工程、说明文档、图标与实际截图的 ZIP。解压后在开发者工具导入 wechat 子目录。
