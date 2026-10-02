@@ -18,6 +18,7 @@ npm run preview
 npm run test
 npm run check
 npm run build
+npm run package
 ```
 
 构建输出：`dist/wechat` 是微信项目；`dist/preview` 是浏览器版本。`preview/bundle.js` 自动生成，不必手工修改。无需运行 `npm install`。
@@ -49,3 +50,5 @@ npm run build -- --appid wx2c7a7dc88ff120e5
 没有广告、付费、登录、排行榜、聊天、云存储、埋点、自建服务器或远程素材。不会请求头像、昵称、手机号、位置、相册或通讯录权限。最高分与音效选择保存在当前设备的本地存储，不跨设备同步。
 
 页面与绘制元素为项目原创代码；平台要求的主体资料、运营联系方式和资质必须由实际运营者提供。
+
+首版交付 ZIP 为 `dist/star-basket-wechat-1.0.0.zip`，解压后导入其中的 `wechat` 目录。图标为 `assets/icon.png`；实际画面截图位于 `release-assets/screenshots`。验证结果见 `docs/TEST-REPORT.md`。

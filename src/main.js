@@ -16,7 +16,7 @@ function boot(platform) {
   };
   const action = (name) => {
     switch (name) {
-      case 'start': case 'restart': platform.unlockSound(); game.start(); break;
+      case 'start': case 'restart': platform.unlockSound(); game.start(); last = null; break;
       case 'sound': sound = !sound; platform.write('sound', sound); if (sound) { platform.unlockSound(); platform.play('catch'); } break;
       case 'pause': game.pause(); break;
       case 'resume': game.resume(); last = null; break;

@@ -16,6 +16,8 @@
       { "type": "folder", "value": "preview" },
       { "type": "folder", "value": "dist" },
       { "type": "folder", "value": ".worktrees" },
+      { "type": "folder", "value": ".tools" },
+      { "type": "folder", "value": "release-assets" },
       { "type": "file", "value": "package.json" },
       { "type": "file", "value": "README.md" }
     ]

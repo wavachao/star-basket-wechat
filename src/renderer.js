@@ -143,7 +143,7 @@ class Renderer {
     const player=game.player || {x:195,y:636,width:72,height:34};
     c.save(); if (game.invulnerable > 0) c.globalAlpha = Math.sin(game.invulnerable * 24) > 0 ? .4 : 1;
     this.basket(player.x,player.y,player.width,player.height); c.restore();
-    if(game.combo>=3){ this.text(`${game.combo} 连接！`,195,158,15,C.gold,'center',600); }
+    if(game.combo>=3){ this.text(`${game.combo} 连击！`,195,158,15,C.gold,'center',600); }
     this.text((game.elapsed || 0)<5?'← 拖动屏幕，让小篮子跟随你 →':'接住每一颗小星星',195,697,12,'#a9c3b9','center');
   }
   overlay(x,y,w,h) {
