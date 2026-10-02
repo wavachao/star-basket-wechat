@@ -23,6 +23,9 @@ if (command === 'preview') args.push('--qr-format', 'image', '--qr-output', path
 if (command === 'upload') args.push('--version', '1.0.0', '--desc', '接住小星星首版：60秒挑战、接星星避石头、暂停、本地最高分和音效', '--info-output', path.join(artifacts, 'wechat-upload-info.json'));
 function quote(value) { if (/["&|<>^%\r\n]/.test(value)) throw new Error('Unsupported shell characters in CLI argument'); return '"' + value + '"'; }
 const line = '"' + [cli, ...args].map(quote).join(' ') + '"';
-const result = cp.spawnSync(process.env.ComSpec || 'cmd.exe', ['/d', '/s', '/c', line], { stdio: 'inherit', cwd: root });
+const result = cp.spawnSync(process.env.ComSpec || 'cmd.exe', ['/d', '/s', '/c', line], { encoding: 'utf8', maxBuffer: 4 * 1024 * 1024, cwd: root, windowsVerbatimArguments: true });
 if (result.error) throw result.error;
-process.exitCode = result.status === null ? 1 : result.status;
+if (result.stdout) process.stdout.write(result.stdout);
+if (result.stderr) process.stderr.write(result.stderr);
+// Official CLI can return exit code 0 even when the platform rejects a project.
+process.exitCode = /\[error\]/i.test((result.stdout || '') + (result.stderr || '')) ? 1 : result.status === null ? 1 : result.status;

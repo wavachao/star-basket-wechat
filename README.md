@@ -25,6 +25,8 @@ npm run package
 
 项目已配置你提供的小游戏 AppID `wx2c7a7dc88ff120e5`。直接构建即可，也可明确指定：
 
+实际微信开发者工具已确认登录，但导入该 ID 时返回“AppID 不是小程序/小游戏类型（code 10）”。需在小游戏后台核对并提供正确 AppID，才能继续上传。
+
 ```powershell
 npm run build -- --appid wx2c7a7dc88ff120e5
 ```
