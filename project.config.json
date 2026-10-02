@@ -1,7 +1,7 @@
 {
   "description": "接住小星星 — 原创竖屏单机小游戏",
   "compileType": "game",
-  "appid": "wx2c7a7dc88ff120e5",
+  "appid": "wx05c79716747c9ea7",
   "projectname": "star-basket",
   "setting": {
     "es6": true,

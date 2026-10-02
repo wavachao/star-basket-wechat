@@ -23,12 +23,12 @@ npm run package
 
 构建输出：`dist/wechat` 是微信项目；`dist/preview` 是浏览器版本。`preview/bundle.js` 自动生成，不必手工修改。无需运行 `npm install`。
 
-项目已配置你提供的小游戏 AppID `wx2c7a7dc88ff120e5`。直接构建即可，也可明确指定：
+项目已配置你提供的小游戏 AppID `wx05c79716747c9ea7`。直接构建即可，也可明确指定：
 
-实际微信开发者工具已确认登录，但导入该 ID 时返回“AppID 不是小程序/小游戏类型（code 10）”。需在小游戏后台核对并提供正确 AppID，才能继续上传。
+微信开发者工具已成功导入此 AppID，生成真机预览并上传 1.0.0 开发版本。正式上线还需真机验收、后台提审与审核后的发布。
 
 ```powershell
-npm run build -- --appid wx2c7a7dc88ff120e5
+npm run build -- --appid wx05c79716747c9ea7
 ```
 
 也可设置环境变量 `WECHAT_APPID`。参数优先于环境变量，不会修改源配置。`touristappid` 可用作本地预览占位值，不能用于正式上传。

@@ -11,7 +11,7 @@ for (const folder of ['dist/wechat', 'docs', 'release-assets']) {
   const dir = path.join(root, folder);
   if (!fs.existsSync(dir)) continue;
   for (const file of walk(dir)) {
-    if (file.endsWith('CONTRACT.md')) continue;
+    if (file.endsWith('CONTRACT.md') || file.endsWith('project.private.config.json')) continue;
     entries.push({ name: path.relative(root, file).replace(/\\/g, '/').replace(/^dist\//, ''), data: fs.readFileSync(file) });
   }
 }

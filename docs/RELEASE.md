@@ -31,12 +31,12 @@ npm run wechat -- upload
 ```powershell
 npm run test
 npm run check
-npm run build -- --appid wx2c7a7dc88ff120e5
+npm run build -- --appid wx05c79716747c9ea7
 ```
 
 只导入 `dist/wechat`。该目录包含 `game.js`、`game.json`、`project.config.json`、`src/` 以及存在时的 `assets/`。文档、测试、开发工具和浏览器页面不会进入代码包。
 
-不指定 AppID 时使用源配置中的 `wx2c7a7dc88ff120e5`，这是用户提供的 AppID。实际微信工具导入返回 code 10：“AppID 不是小程序/小游戏类型”，因此该 ID 目前不可用于小游戏上传，必须在小游戏后台核对并替换为有效小游戏 AppID。`touristappid` 可用于本地预览，但不能用于正式上传。网络域名校验保持开启。
+不指定 AppID 时使用源配置中的 `wx05c79716747c9ea7`。微信工具已成功导入并验证权限，生成真机预览并上传版本 1.0.0。浏览器预览不依赖 AppID；微信导入和上传应使用有效的小游戏 AppID。网络域名校验保持开启。
 
 开发者工具导入路径选择 `dist/wechat`，检查项目类型为小游戏、AppID 正确。若工具提示基础库兼容性，选当前稳定基础库，并在实机确认，勿仅凭模拟器结果。
 

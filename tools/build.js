@@ -2,6 +2,15 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const root = path.resolve(__dirname, '..');
+function listFiles(dir) {
+  return fs.readdirSync(dir, {withFileTypes:true}).flatMap(entry => entry.isDirectory() ? listFiles(path.join(dir,entry.name)) : [path.join(dir,entry.name)]);
+}
+function pruneFiles(dir, allowed) {
+  for (const file of listFiles(dir)) {
+    const rel = path.relative(dir,file).replace(/\\/g,'/');
+    if (!allowed.has(rel) && rel !== 'project.private.config.json') fs.unlinkSync(file);
+  }
+}
 function bundle(entry) {
   const modules = new Map();
   function visit(file) {
@@ -33,7 +42,8 @@ function build() {
   const targetPreview = path.join(root, 'dist', 'preview');
   for (const dir of [target, targetPreview]) {
     if (!dir.startsWith(root + path.sep)) throw new Error('Unsafe build path');
-    fs.rmSync(dir, {recursive: true, force: true});
+    // An open Windows IDE watches and locks the project directory. Update files
+    // in place rather than removing that directory or its watched children.
     fs.mkdirSync(dir, {recursive: true});
   }
   for (const file of ['game.js', 'game.json', 'src']) fs.cpSync(path.join(root, file), path.join(target, file), {recursive: true});
@@ -43,6 +53,18 @@ function build() {
   fs.cpSync(preview, path.join(targetPreview, 'preview'), {recursive: true});
   fs.writeFileSync(path.join(targetPreview, 'index.html'), '<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=preview/index.html"><title>接住小星星</title><a href="preview/index.html">打开游戏</a></html>\n');
   if (fs.existsSync(path.join(root, 'assets'))) fs.cpSync(path.join(root, 'assets'), path.join(targetPreview, 'assets'), {recursive: true});
+  const gameFiles = new Set(['game.js','game.json','project.config.json']);
+  const previewFiles = new Set(['index.html']);
+  for (const folder of ['src','assets']) {
+    const source = path.join(root,folder);
+    if (fs.existsSync(source)) for (const file of listFiles(source)) gameFiles.add(path.relative(root,file).replace(/\\/g,'/'));
+  }
+  for (const folder of ['preview','assets']) {
+    const source = path.join(root,folder);
+    if (fs.existsSync(source)) for (const file of listFiles(source)) previewFiles.add(path.relative(root,file).replace(/\\/g,'/'));
+  }
+  pruneFiles(target,gameFiles);
+  pruneFiles(targetPreview,previewFiles);
   console.log('Built dist/wechat and dist/preview. AppID: ' + config.appid);
   if (config.appid === 'touristappid') console.log('Preview only: supply your registered AppID before uploading.');
 }
