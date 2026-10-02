@@ -13,6 +13,17 @@
 
 官方入口：[小游戏开发文档](https://developers.weixin.qq.com/minigame/dev/guide/)、[微信公众平台](https://mp.weixin.qq.com/)。
 
+本工作站已将微信官方稳定版工具安装到项目的 `.tools/wechat-devtools`，安装包腾讯数字签名验证通过。打开其中的 `微信开发者工具.exe`，用管理员微信扫码登录，并在“设置 → 安全设置”开启“服务端口”，即可使用本项目封装的命令：
+
+```powershell
+npm run wechat -- status
+npm run wechat -- open
+npm run wechat -- preview
+npm run wechat -- upload
+```
+
+`open` 导入当前构建后的 `dist/wechat`，`preview` 生成 `artifacts/wechat-preview.png` 供扫码真机游玩，`upload` 上传版本 1.0.0。没有管理员登录或项目权限时，微信工具会拒绝操作；服务端口关闭时无法用命令行控制工具。也可以在开发者工具界面手动导入、预览、上传。其他电脑需要自行安装官方工具，或设置 `WECHAT_DEVTOOLS` 为其安装目录。
+
 ## 2. 构建真正的微信项目
 
 在项目目录执行：
