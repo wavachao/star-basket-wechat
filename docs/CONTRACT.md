@@ -1,0 +1,11 @@
+# Shared implementation contract
+
+One game: 接住小星星 / Star Basket. Vanilla JS CommonJS modules, no external runtime dependencies. WeChat game and browser preview share all game code.
+
+src/core.js exports { Game, GAME_SECONDS }. Game constructor({best=0, random=Math.random}={}); methods start(), update(dt seconds), move(x logical coord), pause(), resume(), home(); properties state ('menu','playing','paused','result'), width=390,height=720, player {x,y,width,height}, items [{id,type:'star'|'rock',x,y,r,speed}], particles optional, score,best,lives,remaining,elapsed,combo. Game drains events via drainEvents() array [{type:'catch'|'hit'|'end'|'start',...}]. Spawn fairness and time based updates, no platform calls.
+
+src/renderer.js exports { Renderer }. constructor(canvas), resize(width,height,dpr,safeTop=0,safeBottom=0), draw(game,{sound:true}), hitTest(x,y,state) returns 'start'|'sound'|'pause'|'resume'|'restart'|'home'|null; toGameX(screenX) maps coordinates for core.move. Canvas physical size handled by renderer.resize. Renderer logical game height 720,width390, scaled and centered to fit available screen; canvas clear full viewport. Hit testing uses screen logical px. No DOM/wx dependencies. Visual polished dark navy night sky, yellow stars, mint basket, warm highlights. Text Chinese. Instruction overlay on menu, score/time/hearts HUD, pause modal/result.
+
+Root owns src/main.js and src/platform.js. Main boot(platform) constructs canvas via platform.createCanvas, Game, Renderer, runs RAF, pointer callbacks, lifecycle pause, storage and sounds. Browser tools bundle CommonJS with dependency-free script. WeChat game.js requires src/main and src/platform, browser uses a generated bundle. Platform interface implemented by root.
+
+Agent packaging owns tools/*.js, package.json, project.config.json, game.json, docs/RELEASE.md, docs/PRIVACY.md, docs/STORE.md, README.md, tests/core.test.js. Browser build entry game.js (root supplies browser-aware platform). Build scripts write preview/bundle.js for local preview and dist/wechat/ for upload (only runtime + assets + game configs). Use AppID placeholder 'touristappid' for local import, no invented production ID. Static server default port 4173 bound localhost. Root owns preview/index.html.
